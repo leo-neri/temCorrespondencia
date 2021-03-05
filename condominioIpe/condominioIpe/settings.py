@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'temCorrespondencia.apps.TemcorrespondenciaConfig'
+    'temCorrespondencia.apps.TemcorrespondenciaConfig',
+    'cpf_field',
 ]
 
 MIDDLEWARE = [

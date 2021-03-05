@@ -1,0 +1,13 @@
+{% extends "temCorrespondencia/base.html" %}
+
+{% block title %}{{ encomenda.tipo|capfirst }} - {{ encomenda.morador }}{% endblock %}
+
+{% block content %}
+<h1>{{ encomenda.tipo|capfirst }}</h1>
+<h2>{{ encomenda.morador }}</h2>
+<p class="date">
+    <p class="date">
+        Criado por {{ encomenda.autor }} em {{ encomenda.recebimento }}
+    </p>
+</p>
+{% endblock %}}

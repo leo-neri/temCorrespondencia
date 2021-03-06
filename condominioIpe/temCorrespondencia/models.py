@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from cpf_field.models import CPFField
 from django.urls import reverse
 
+
 # Create your models here.
 class Morador(models.Model):
     TORRES = (('a', 'A'), ('b', 'B'), ('c', 'C'), ('d', 'D'), ('e', 'E'))
@@ -44,4 +45,4 @@ class Encomenda(models.Model):
         return self.morador.nome
 
     def get_absolute_url(self):
-        return reverse('temCorrespondencia:detalhe_encomenda', args=[self.recebimento.year, self.recebimento.month, self.recebimento.day, self.morador])
+        return reverse('temCorrespondencia:detalhe_encomenda', args=[self.recebimento.year, self.recebimento.month, self.recebimento.day, '_'.join(self.morador.nome.split())])

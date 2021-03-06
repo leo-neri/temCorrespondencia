@@ -8,5 +8,5 @@ def lista_encomendas(request):
     return render(request, 'temCorrespondencia/encomenda/lista.html', {'encomendas': encomendas})
 
 def detalhe_encomenda(request, ano, mes, dia, morador):
-    encomenda = get_object_or_404(Encomenda, status='naoRecebido', morador=morador, recebimento__year=ano, recebimento__month   =mes, recebimento__day=dia,)
+    encomenda = get_object_or_404(Encomenda, status='naoRecebido', morador=morador, recebimento__year=ano, recebimento__month=mes, recebimento__day=dia,)
     return render(request, 'temCorrespondencia/encomenda/detalhe.html', {'encomenda': encomenda})

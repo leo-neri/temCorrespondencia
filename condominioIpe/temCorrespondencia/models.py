@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
-from localflavor.br.forms import BRCPFField
+from cpf_field.models import CPFField
 from django.urls import reverse
 
 
@@ -11,7 +11,7 @@ class Morador(models.Model):
     nome = models.CharField(max_length=50)
     torre = models.CharField(max_length=1, choices=TORRES)
     apartamento = models.CharField(max_length=2, default='')
-    cpf = BRCPFField()
+    cpf = CPFField('CPF')
     email = models.EmailField()
     telefone = models.CharField(max_length=11)
 

@@ -1,8 +1,23 @@
 from django.contrib import admin
 from .models import Encomenda, Morador
+from django.core.mail import send_mail
 
 # Register your models here.
-@admin.register(Encomenda)
+def enviaEmail(modeladmin, request, queryset):
+    id_morador = list(queryset.values_list('morador_id', flat=True))[0]
+    morador = Morador.objects.get(pk=id_morador)
+    nome = morador.nome
+    email = morador.email
+    send_mail(
+        'Nova encomenda para você!',
+        f'Olá {nome}, uma nova encomenda chegou para você!',
+        'mestresdopython@gmail.com',
+        [email],
+        fail_silently=False,
+    )
+
+enviaEmail.short_description = "Enviar email para os selecionados"
+
 class EncomendaAdmin(admin.ModelAdmin):
 
     # readonly_fields = ['autor']
@@ -17,6 +32,10 @@ class EncomendaAdmin(admin.ModelAdmin):
     raw_id_fields = ('autor',)
     date_hierarchy = 'recebimento'
     ordering = ('status', 'recebimento')
+
+    actions = [enviaEmail]
+
+admin.site.register(Encomenda, EncomendaAdmin)
 
 
 @admin.register(Morador)

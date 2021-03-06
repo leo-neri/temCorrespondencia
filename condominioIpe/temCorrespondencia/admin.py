@@ -1,8 +1,22 @@
 from django.contrib import admin
 from .models import Encomenda, Morador
 from django.core.mail import send_mail
+from django.utils.translation import ugettext_lazy
 
 # Register your models here.
+class MyAdminSite():
+    # Text to put at the end of each page's <title>.
+    site_title = ugettext_lazy('My site admin')
+
+    # Text to put in each page's <h1> (and above login form).
+    site_header = ugettext_lazy('My administration')
+
+    # Text to put at the top of the admin index page.
+    index_title = ugettext_lazy('Site administration')
+
+admin_site = MyAdminSite()
+
+
 def enviaEmail(modeladmin, request, queryset):
     id_morador = list(queryset.values_list('morador_id', flat=True))[0]
     morador = Morador.objects.get(pk=id_morador)

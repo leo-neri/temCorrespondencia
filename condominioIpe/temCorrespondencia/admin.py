@@ -18,6 +18,7 @@ class EncomendaAdmin(admin.ModelAdmin):
     date_hierarchy = 'recebimento'
     ordering = ('status', 'recebimento')
 
+
 @admin.register(Morador)
 class MoradorAdmin(admin.ModelAdmin):
     list_display = ('nome', 'torre', 'apartamento', 'email', 'telefone')

@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'temCorrespondencia.apps.TemcorrespondenciaConfig',
-    'cpf_field',
+     'localflavor',
 ]
 
 MIDDLEWARE = [

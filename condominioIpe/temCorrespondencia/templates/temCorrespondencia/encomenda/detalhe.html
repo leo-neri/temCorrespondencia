@@ -1,6 +1,6 @@
 {% extends "temCorrespondencia/base.html" %}
 
-{% block title %}{{ encomenda.tipo|capfirst }} - {{ encomenda.morador }}{% endblock %}
+{% block title %}{{ encomenda.tipo|capfirst }} - {{ encomenda.morador.nome }}{% endblock %}
 
 {% block content %}
 <h1>{{ encomenda.tipo|capfirst }}</h1>

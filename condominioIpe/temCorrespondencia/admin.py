@@ -46,8 +46,12 @@ class EncomendaAdmin(admin.ModelAdmin):
     raw_id_fields = ('autor',)
     date_hierarchy = 'recebimento'
     ordering = ('status', 'recebimento')
-
     actions = [enviaEmail]
+
+    def save_model(self, request, obj, form, change):
+        if not obj.autor:
+            obj.autor = request.user
+        obj.save()
 
 admin.site.register(Encomenda, EncomendaAdmin)
 

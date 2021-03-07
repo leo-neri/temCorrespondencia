@@ -31,7 +31,7 @@ class Encomenda(models.Model):
     STATUS = (('naoRecebido', 'Não Retirado'), ('recebido', 'Retirado'))
     TIPO_ENCOMENDA = (('envelope', 'Envelope'), ('caixa', 'Caixa'), ('pacote', 'Pacote'))
     RETIRADA = (('6', '6h'), ('12', '12h'), ('24', '24h'), ('48', '48h'), ('72', '72h'))
-    autor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='temCorrespondencia_encomendas', null=True)
+    autor = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, null=True,blank=True)
     morador = models.ForeignKey(Morador, on_delete=models.CASCADE, related_name='temCorrespondencia_moradores')
     tipo = models.CharField(choices=TIPO_ENCOMENDA, max_length=20)
     status = models.CharField(max_length=30, choices=STATUS)

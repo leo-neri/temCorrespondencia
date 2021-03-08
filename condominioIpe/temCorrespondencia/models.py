@@ -47,3 +47,4 @@ class Encomenda(models.Model):
 
     def get_absolute_url(self):
         return reverse('temCorrespondencia:detalhe_encomenda', args=[self.recebimento.year, self.recebimento.month, self.recebimento.day, self.morador.nome])
+

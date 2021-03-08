@@ -23,7 +23,7 @@ def enviaEmail(modeladmin, request, queryset):
         send_mail(
             'Retire sua encomenda!',
             corpo,
-            'mestresdopython@gmail.com',
+            'encomendasipe@gmail.com',
             [email],
             fail_silently=False,
         )
@@ -66,7 +66,7 @@ def my_handler(sender, instance, created, **kwargs):
         send_mail(
             'Nova encomenda para você!',
             corpo,
-            'mestresdopython@gmail.com',
+            'encomendasipe@gmail.com',
             [email],
             fail_silently=False,
         )

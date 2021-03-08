@@ -20,15 +20,18 @@ admin_site = MyAdminSite()
 def enviaEmail(modeladmin, request, queryset):
     id_morador = list(queryset.values_list('morador_id', flat=True))[0]
     morador = Morador.objects.get(pk=id_morador)
+    tipo = str(list(queryset.values_list('tipo', flat=True))[0]).capitalize()
+    prazo = str(list(queryset.values_list('retirada', flat=True))[0])
     nome = morador.nome
     email = morador.email
-    send_mail(
-        'Nova encomenda para você!',
-        f'Olá {nome}, uma nova encomenda chegou para você!',
-        'mestresdopython@gmail.com',
-        [email],
-        fail_silently=False,
-    )
+    corpo = f'Olá {nome}, uma nova encomenda de tipo {tipo} chegou para você! O seu prazo de retirada é de {prazo}h. Venha retirá-la!'
+    # send_mail(
+    #     'Nova encomenda para você!',
+    #     corpo,
+    #     'mestresdopython@gmail.com',
+    #     [email],
+    #     fail_silently=False,
+    # )
 
 enviaEmail.short_description = "Enviar email para os selecionados"
 
@@ -53,3 +56,16 @@ admin.site.register(Encomenda, EncomendaAdmin)
 @admin.register(Morador)
 class MoradorAdmin(admin.ModelAdmin):
     list_display = ('nome', 'torre', 'apartamento', 'email', 'telefone')
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+@receiver(post_save, sender=Encomenda)
+def my_handler(sender, instance, created, **kwargs):
+    if created:
+        tipo = instance.tipo.capitalize()
+        prazo = instance.retirada
+        morador = Morador.objects.get(nome=str(instance))
+        nome = morador.nome
+        email = morador.email
+        corpo = f'Olá {nome}, uma nova encomenda de tipo {tipo} chegou para você! O seu prazo de retirada é de {prazo}h. Venha retirá-la!'
+        print(corpo)

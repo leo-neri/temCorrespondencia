@@ -33,15 +33,8 @@ def enviaEmail(modeladmin, request, queryset):
 enviaEmail.short_description = "Enviar email para os selecionados"
 
 class EncomendaAdmin(admin.ModelAdmin):
-
-    # readonly_fields = ['autor']
-    #
-    # def get_form(self, request, obj=None, **kwargs):
-    #     Encomenda.autor = request.user
-    #     return super().get_form(request, obj, **kwargs)
-
-    list_display = ('morador', 'tipo', 'recebimento', 'status', 'autor')
-    list_filter = ('morador', 'tipo', 'status')
+    list_display = ('morador', 'tipo', 'recebimento', 'status', 'autor', 'torre')
+    list_filter = ('morador', 'tipo', 'status', 'torre')
     search_fields = ('morador', 'tipo')
     raw_id_fields = ('autor',)
     date_hierarchy = 'recebimento'
@@ -49,6 +42,7 @@ class EncomendaAdmin(admin.ModelAdmin):
     actions = [enviaEmail]
 
     def save_model(self, request, obj, form, change):
+        obj.torre = str(Morador.objects.get(nome=obj).torre).upper()
         if not obj.autor:
             obj.autor = request.user
         obj.save()

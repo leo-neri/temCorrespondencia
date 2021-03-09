@@ -22,5 +22,4 @@ admin.site.site_title = 'Condomínio Ipê'
 
 urlpatterns = [
     path('', admin.site.urls),
-    # path('temCorrespondencia/', include('temCorrespondencia.urls', namespace='temCorrespondencia'))
 ]

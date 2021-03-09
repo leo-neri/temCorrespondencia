@@ -10,7 +10,7 @@ class Morador(models.Model):
     TORRES = (('a', 'A'), ('b', 'B'), ('c', 'C'), ('d', 'D'), ('e', 'E'))
     nome = models.CharField(max_length=50)
     torre = models.CharField(max_length=1, choices=TORRES)
-    apartamento = models.CharField(max_length=2, default='')
+    apartamento = models.CharField(max_length=3, default='')
     cpf = CPFField('CPF')
     email = models.EmailField()
     telefone = models.CharField(max_length=11)
@@ -28,15 +28,15 @@ class NaoRecebidoManager(models.Manager):
 class Encomenda(models.Model):
     objects = models.Manager()
     naoRecebido = NaoRecebidoManager()
-    STATUS = (('naoRecebido', 'Não Retirado'), ('recebido', 'Retirado'))
+    STATUS = (('naoRetiradoP', 'Não Retirado (P)'), ('naoRetiradoFP', 'Não Retirado (FP)'), ('retirado', 'Retirado'), ('retiradoOP', 'Retirado (OP)'))
     TIPO_ENCOMENDA = (('envelope', 'Envelope'), ('caixa', 'Caixa'), ('pacote', 'Pacote'))
     RETIRADA = (('6', '6h'), ('12', '12h'), ('24', '24h'), ('48', '48h'), ('72', '72h'))
     autor = models.ForeignKey(User, on_delete=models.CASCADE, editable=False, null=True, blank=True)
     morador = models.ForeignKey(Morador, on_delete=models.CASCADE, related_name='temCorrespondencia_moradores')
     torre = models.CharField(max_length=1, editable=False, null=True, blank=True, default='')
     tipo = models.CharField(choices=TIPO_ENCOMENDA, max_length=20)
-    status = models.CharField(max_length=30, choices=STATUS)
-    recebimento = models.DateTimeField(default=timezone.now)
+    status = models.CharField(max_length=30, choices=STATUS, default='naoRecebidoP')
+    recebimento = models.DateTimeField(auto_now_add=True)
     retirada = models.CharField(max_length=3, choices=RETIRADA, default='24')
 
     class Meta:

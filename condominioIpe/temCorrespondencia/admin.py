@@ -75,7 +75,7 @@ def my_handler(sender, instance, created, **kwargs):
         email = morador.email
         corpo = f'Olá {nome}, uma nova encomenda de tipo {tipo} chegou para você! O seu prazo de retirada é de {prazo}h. Venha retirá-la!'
         send_mail(
-            'Comprovante de Retirada',
+            'Nova encomenda!',
             corpo,
             'encomendasipe@gmail.com',
             [email],
@@ -105,7 +105,7 @@ def my_handler(sender, instance, created, **kwargs):
             corpo = f'Olá {nome}, sua encomenda de tipo {tipo} foi retirada por outra pessoa! Este é seu comprovante!'
             print(corpo)
             send_mail(
-                'Nova encomenda para você!',
+                'Comprovante de retirada',
                 corpo,
                 'encomendasipe@gmail.com',
                 [email],

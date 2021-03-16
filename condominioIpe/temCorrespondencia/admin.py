@@ -9,15 +9,10 @@ from django.dispatch import receiver
 # Register your models here.
 
 def enviaEmail(modeladmin, request, queryset):
-    prazo = str(list(queryset.values_list('retirada', flat=True))[0])
-    recebimento = list(queryset.values_list('recebimento', flat=True))[0]
     status = list(queryset.values_list('status', flat=True))[0]
-    ja_retirado = status == 'retirado' or status == 'retiradoOP'
-    agora = datetime.now(tz=timezone(timedelta(0)))
-    diferenca_segundos = (agora-recebimento).total_seconds()
-    prazo_segundos = int(prazo)*3600
-    if diferenca_segundos >= prazo_segundos and not ja_retirado:
-        queryset.update(status='naoRetiradoFP')
+    if status == 'naoRetiradoFP':
+        queryset.update(status='naoRetiradoP')
+        prazo = str(list(queryset.values_list('retirada', flat=True))[0])
         id_morador = list(queryset.values_list('morador_id', flat=True))[0]
         morador = Morador.objects.get(pk=id_morador)
         nome = morador.nome
@@ -33,7 +28,20 @@ def enviaEmail(modeladmin, request, queryset):
             fail_silently=False,
         )
 
-enviaEmail.short_description = "Enviar email para os selecionados"
+enviaEmail.short_description = "Enviar email para os atrasados"
+
+def conferePrazo(modeladmin, request, queryset):
+    prazo = str(list(queryset.values_list('retirada', flat=True))[0])
+    recebimento = list(queryset.values_list('recebimento', flat=True))[0]
+    status = list(queryset.values_list('status', flat=True))[0]
+    ja_retirado = status == 'retirado' or status == 'retiradoOP'
+    agora = datetime.now(tz=timezone(timedelta(0)))
+    diferenca_segundos = (agora-recebimento).total_seconds()
+    prazo_segundos = int(prazo)*3600
+    if diferenca_segundos >= prazo_segundos and not ja_retirado:
+        queryset.update(status='naoRetiradoFP')
+
+conferePrazo.short_description = "Conferir prazos"
 
 class EncomendaAdmin(admin.ModelAdmin):
     list_display = ('morador', 'tipo', 'recebimento', 'status', 'autor', 'torre')
@@ -42,7 +50,7 @@ class EncomendaAdmin(admin.ModelAdmin):
     raw_id_fields = ('autor',)
     date_hierarchy = 'recebimento'
     ordering = ('status', '-recebimento')
-    actions = [enviaEmail]
+    actions = [enviaEmail, conferePrazo]
 
     def save_model(self, request, obj, form, change):
         obj.torre = str(Morador.objects.get(nome=obj).torre).upper()
@@ -67,7 +75,7 @@ def my_handler(sender, instance, created, **kwargs):
         email = morador.email
         corpo = f'Olá {nome}, uma nova encomenda de tipo {tipo} chegou para você! O seu prazo de retirada é de {prazo}h. Venha retirá-la!'
         send_mail(
-            'Retire sua encomenda!',
+            'Comprovante de Retirada',
             corpo,
             'encomendasipe@gmail.com',
             [email],
@@ -97,7 +105,7 @@ def my_handler(sender, instance, created, **kwargs):
             corpo = f'Olá {nome}, sua encomenda de tipo {tipo} foi retirada por outra pessoa! Este é seu comprovante!'
             print(corpo)
             send_mail(
-                'Comprovante de Retirada',
+                'Nova encomenda para você!',
                 corpo,
                 'encomendasipe@gmail.com',
                 [email],
